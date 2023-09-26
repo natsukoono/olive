@@ -1,0 +1,43 @@
+<div>
+  <div class="card">
+    <div class="d-flex justify-content-center card-img">
+      <%= image_tag 'logo.png', width: '200px' %>
+    </div>
+    <div class="card-img-overlay mt-4 mx-5 d-flex">
+      <div class="mr-auto">
+        <i class="fas fa-user"></i>
+        <%= link_to "マイページ" , user_path(@user.id), style: "color:#66CC33; font-size:25px;" %>
+      </div>
+      <div>
+      <ul class="list-group-horizontal list-unstyled d-flex flex-row-reverse">
+        <li class="mx-2">
+          <i class="fas fa-home"></i>
+          <%= link_to "スポット", spots_path, style: "color:#66CC33; font-size: 25px;" %>
+        </li>
+        <li class="mx-2">
+          <i class="fas fa-plus"></i>
+          <%= link_to "投稿", new_spot_path , style: "color:#66CC33; font-size: 25px;" %>
+        </li>
+      </ul>
+      </div>
+    </div>
+  </div>
+<div>
+<div class="container mt-4 mx-auto">
+  <div class="row">
+    <div class="mx-auto">
+      <h1>新規投稿</h1>
+      <%= form_with model:@spot, local:true do |f| %>
+        <p>スポット</p>
+        <%= f.text_field :title, size:50 %>
+        <p>場所</p>
+        <%= f.text_field :place, size:50 %>
+        <p>紹介文</p>
+        <%= f.text_field :body, size:50 %>
+        <p>画像</p>
+        <%= f.attachment_field :image %>
+        <%= f.submit '投稿', class:"btn btn-success d-md-block btn-sm" %>
+      <% end %>
+    </div>
+  </div>
+</div>

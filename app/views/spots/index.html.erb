@@ -1,0 +1,103 @@
+<div>
+  <div class="card">
+    <div class="d-flex justify-content-center card-img">
+      <%= image_tag 'logo.png', width: '200px' %>
+    </div>
+    <div class="card-img-overlay mt-4 mx-5 d-flex">
+      <div class="mr-auto">
+        <i class="fas fa-user"></i>
+        <%= link_to "マイページ" , user_path(@user.id), style: "color:#66CC33; font-size:25px;" %>
+      </div>
+      <div>
+      <ul class="list-group-horizontal list-unstyled d-flex flex-row-reverse">
+        <li class="mx-2">
+          <i class="fas fa-home"></i>
+          <%= link_to "スポット", spots_path, style: "color:#66CC33; font-size: 25px;" %>
+        </li>
+        <li class="mx-2">
+          <i class="fas fa-plus"></i>
+          <%= link_to "投稿", new_spot_path , style: "color:#66CC33; font-size: 25px;" %>
+        </li>
+      </ul>
+      </div>
+    </div>
+  </div>
+<div>
+<div class="container mt-5 mx-5">
+  <% @spots.each do |spot| %>
+    <div class="row mx-5 mt-5">
+      <div class="col">
+        <%= attachment_image_tag spot, :image, :fill,250,250 %>
+        <%= link_to user_path(spot.user.id), style:"color:black;" do %>
+          <h5><%= spot.user.name %></h5>
+        <% end %>
+      </div>
+      <div class="col-6">
+        <%= link_to spot_path(spot.id) do %>
+          <h1><%= spot.title %></h1>
+        <% end %>
+        <div class="d-flex">
+          <div class="mr-3">
+            <% if spot.favorited_by?(current_user) %>
+            <p>
+            ♥<%= spot.favorites.count %> いいね
+            </p>
+            <% else %>
+            <p>
+            ♡<%= spot.favorites.count %> いいね
+            </p>
+            <% end %>
+          </div>
+          <div class="mr-3">
+            <% if spot.went_by?(current_user) %>
+            <p>
+            <%= spot.wents.count %> 人が訪れた
+            </p>
+            <% else %>
+            <p>
+            <%= spot.wents.count %> 人が訪れた
+            <% end %>
+            </p>
+          </div>
+          <div class="d-flex">
+            <p>💬<%= spot.comments.count %>件</p>
+          </div>
+        </div>
+        <p>場所 : <%= spot.place %></p>
+        <%= spot.body %>
+      </div>
+      <div class="col-2 mt-5">
+        <div class="mr-3">
+            <% if spot.favorited_by?(current_user) %>
+            <p>
+            <%= link_to spot_favorites_path(spot), class:"btn btn-success", method: :delete do %>
+            ♥ いいね
+            <% end %>
+            </p>
+            <% else %>
+            <p>
+            <%= link_to spot_favorites_path(spot), class:"btn btn-success", method: :post do %>
+            ♡ いいね
+            <% end %>
+            </p>
+            <% end %>
+          </div>
+          <div class="mr-3">
+            <% if spot.went_by?(current_user) %>
+            <p>
+            <%= link_to spot_wents_path(spot), class:"btn btn-success", method: :delete do %>
+            ★行った
+            <% end %>
+            </p>
+            <% else %>
+            <p>
+            <%= link_to spot_wents_path(spot), class:"btn btn-success", method: :post do %>
+            ☆行った
+            <% end %>
+            </p>
+            <% end %>
+          </div>
+      </div>
+    </div>
+  <% end %>
+</div>

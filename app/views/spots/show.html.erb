@@ -1,0 +1,120 @@
+<div>
+  <div class="card">
+    <div class="d-flex justify-content-center card-img">
+      <%= image_tag 'logo.png', width: '200px' %>
+    </div>
+    <div class="card-img-overlay mt-4 mx-5 d-flex">
+      <div class="mr-auto">
+        <i class="fas fa-user"></i>
+        <%= link_to "マイページ" , user_path(@user.id), style: "color:#66CC33; font-size:25px;" %>
+      </div>
+      <div>
+      <ul class="list-group-horizontal list-unstyled d-flex flex-row-reverse">
+        <li class="mx-2">
+          <i class="fas fa-home"></i>
+          <%= link_to "スポット", spots_path, style: "color:#66CC33; font-size: 25px;" %>
+        </li>
+        <li class="mx-2">
+          <i class="fas fa-plus"></i>
+          <%= link_to "投稿", new_spot_path , style: "color:#66CC33; font-size: 25px;" %>
+        </li>
+      </ul>
+      </div>
+    </div>
+  </div>
+<div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-3">
+      <%= attachment_image_tag @finduser, :profile_image, :fill, 150, 150, format: 'jpeg', fallback: "default-image.jpg" %>
+      <p><%= @finduser.name %></p>
+      <p><%= @finduser.introduction %></p>
+      <%= link_to "プロフィールを編集", edit_user_path(@finduser.id), class:"btn btn-outline-dark" %>
+    </div>
+    <div class="col-9">
+      <div class="container">
+        <div class="row mx-5 mt-5">
+          <div class="col">
+            <%= attachment_image_tag @spot, :image, :fill,250,250 %>
+            <%= link_to user_path(@spot.user.id), style:"color:black;" do %>
+            <h5><%= @spot.user.name %></h5>
+            <% end %>
+          </div>
+          <div class="col-6">
+            <%= link_to spot_path(@spot.id) do %>
+            <h1><%= @spot.title %></h1>
+            <% end %>
+            <div class="d-flex">
+              <div class="mr-3">
+                <% if @spot.favorited_by?(current_user) %>
+                <p>
+                ♥<%= @spot.favorites.count %> いいね
+                </p>
+                <% else %>
+                <p>
+                ♡<%= @spot.favorites.count %> いいね
+                </p>
+                <% end %>
+              </div>
+              <div class="mr-3">
+                <% if @spot.went_by?(current_user) %>
+                <p>
+                <%= @spot.wents.count %> 人が訪れた
+                </p>
+                <% else %>
+                <p>
+                <%= @spot.wents.count %> 人が訪れた
+                <% end %>
+                </p>
+              </div>
+            </div>
+            <p>場所 : <%= @spot.place %></p>
+            <%= @spot.body %><br>
+            <% if @finduser.id == current_user.id %><%= link_to "編集", edit_spot_path, class:"btn btn-success btn-sm" %><% end %>
+            <% if @finduser.id == current_user.id %><%= link_to "削除", spot_path(@spot), method: :delete, class:"btn btn-danger btn-sm" %><% end %>
+          </div>
+        </div>
+        <div class="pl-5 mt-3"><h5>コメント<%= @spot.comments.count %>件</h5></div>
+        <% @spot.comments.each do |comment| %>
+          <div class="row mx-5 mt-3">
+            <%= attachment_image_tag comment.user, :profile_image, :fill, 40, 40, format: 'jpeg', fallback: "default-image.jpg" %>
+            <p><%= comment.user.name %></p>
+          </div>
+          <div class="row mx-5 mt-3 border">
+            <div class="col-7">
+              <%= comment.comment %>
+            </div>
+            <div class="col-3 mt-2 mb-2">
+              <%= attachment_image_tag comment, :image, :fill, 150, 150 %>
+            </div>
+            <div class="col-2 ">
+            <% if comment.user == current_user %>
+              <%= link_to "削除", spot_comment_path(comment.spot, comment), method: :delete %>
+            <% end %>
+            </div>
+          </div>
+        <% end %>
+        <div class="row mx-5 mt-5">
+          <div>
+            <%= attachment_image_tag @user, :profile_image, :fill, 40, 40, format: 'jpeg', fallback: "default-image.jpg" %>
+            <p><%= @user.name %></p>
+          </div>
+          <div class="d-flex border px-3">
+            <div class="mt-3 mb-3">
+              <%= form_with(model:[@spot,@comment], local: true) do |f| %>
+              <%= f.text_area :comment, rows:'10', size:'50%' , placeholder: "コメントをここに" %>
+            </div>
+            <div class="mt-3 mb-3">
+              <%= f.attachment_field :image, placeholder:"画像を選択" %>
+            </div>
+          </div>
+          <div class="mt-3">
+          <%= f.submit "送信する" %>
+          </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
